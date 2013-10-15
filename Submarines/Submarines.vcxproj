@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="InstructionView.cpp" />
+    <ClCompile Include="LoadGameView.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuView.cpp" />
   </ItemGroup>
