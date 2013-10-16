@@ -4,7 +4,11 @@
 class Submarine
 {
 public:
-	Submarine(unsigned int HullStrength=100, unsigned int Torpedoes=20);
+	Submarine(unsigned int HullStrength=100, unsigned int Torpedoes=20)
+	{
+		this->HullStrength=HullStrength;
+		this->Torpedoes=Torpedoes;
+	}
 
 protected:
 	unsigned int HullStrength;

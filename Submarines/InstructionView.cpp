@@ -30,7 +30,7 @@ InstructionView::InstructionView()
 		In.close();
 
 		// Terminate string
-		Instructions[Size]='\0';
+		Instructions[(unsigned int)Size]='\0';
 	}
 }
 

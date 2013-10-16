@@ -80,6 +80,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConsoleControl.cpp" />
+    <ClCompile Include="EnemySubmarine.cpp" />
+    <ClCompile Include="GameView.cpp" />
     <ClCompile Include="InstructionView.cpp" />
     <ClCompile Include="LoadGameView.cpp" />
     <ClCompile Include="main.cpp" />

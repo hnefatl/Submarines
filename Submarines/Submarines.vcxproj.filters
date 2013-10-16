@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Views">
       <UniqueIdentifier>{cc23f016-dd70-4448-a68f-bd740f7e3073}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Submarines">
+      <UniqueIdentifier>{38b6edfc-1ae7-4fa6-a29f-32cfa532e784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Submarines">
+      <UniqueIdentifier>{ac3c4d01-3fed-4e29-9672-061a31b7b544}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -32,6 +38,15 @@
     </ClCompile>
     <ClCompile Include="LoadGameView.cpp">
       <Filter>Source Files\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="GameView.cpp">
+      <Filter>Source Files\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySubmarine.cpp">
+      <Filter>Source Files\Submarines</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleControl.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,13 +69,13 @@
       <Filter>Header Files\Views</Filter>
     </ClInclude>
     <ClInclude Include="EnemySubmarine.h">
-      <Filter>Header Files\Views</Filter>
+      <Filter>Header Files\Submarines</Filter>
     </ClInclude>
     <ClInclude Include="PlayerSubmarine.h">
-      <Filter>Header Files\Views</Filter>
+      <Filter>Header Files\Submarines</Filter>
     </ClInclude>
     <ClInclude Include="Submarine.h">
-      <Filter>Header Files\Views</Filter>
+      <Filter>Header Files\Submarines</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

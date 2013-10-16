@@ -9,7 +9,7 @@ class View
 {
 public:
 	// Returns true on continuation of program, returns false on signal to exit
-	virtual bool Run();
+	virtual bool Run()=0;
 };
 
 #endif
