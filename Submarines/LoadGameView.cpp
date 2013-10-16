@@ -1,6 +1,7 @@
 #include "LoadGameView.h"
 
 #include <Windows.h>
+#include <fstream>
 
 LoadGameView::LoadGameView()
 {
@@ -33,7 +34,7 @@ bool LoadGameView::Run()
 			// Create a new game
 			GameView Game=GameView();
 			// Load the data
-			if(!LoadGameData(&Game))
+			if(!LoadGameData(&Game, FileNames[CurrentlySelected]))
 			{
 				// Loading failed
 				Clear();
@@ -76,8 +77,10 @@ bool LoadGameView::Update()
 	case 13: // Enter
 		return false;
 	}
+
+	return true;
 }
-void LoadGameView::Draw(const bool &Initial=false) const
+void LoadGameView::Draw(const bool &Initial) const
 {
 	if(Initial) // First drawing - draw the general layout
 	{
@@ -149,4 +152,15 @@ std::vector<std::string> LoadGameView::GetFileNames(const std::string &Directory
 	FindClose(Finder);
 	return FileNames;
 }
-bool
+bool LoadGameView::LoadGameData(GameView *const Game, const std::string &FileName) const
+{
+	std::ifstream In=std::ifstream(FileName.c_str());
+	if(!In.good())
+	{
+		return false;
+	}
+
+
+
+	return true;
+}

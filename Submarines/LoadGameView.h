@@ -21,7 +21,7 @@ public:
 
 protected:
 	std::vector<std::string> GetFileNames(const std::string &Directory) const;
-	bool LoadGameData(GameView *const Game) const;
+	bool LoadGameData(GameView *const Game, const std::string &FileName) const;
 
 	std::vector<std::string> FileNames;
 	unsigned int LastSelected;

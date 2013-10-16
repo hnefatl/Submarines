@@ -15,6 +15,8 @@ public:
 	void Draw();
 
 protected:
+	unsigned int Turn;
+
 
 };
 

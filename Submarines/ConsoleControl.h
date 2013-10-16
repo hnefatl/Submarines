@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <windows.h>
+#include <stdio.h>
 
 enum CONSOLECOLOUR
 {
@@ -43,6 +44,7 @@ void SetCursor(int x, int y) {
 
 void Clear()
 {
+	HANDLE hConsole=GetConsoleWindow();
 	COORD coordScreen = { 0, 0 };    // home for the cursor 
 	DWORD cCharsWritten;
 	CONSOLE_SCREEN_BUFFER_INFO csbi; 

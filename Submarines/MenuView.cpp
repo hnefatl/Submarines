@@ -14,12 +14,12 @@ MenuView::MenuView()
 
 bool MenuView::Run()
 {
-
+	return true;
 }
 
 bool MenuView::Update()
 {
-
+	return true;
 }
 void MenuView::Draw()
 {

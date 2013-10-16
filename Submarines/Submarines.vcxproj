@@ -87,10 +87,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleControl.h" />
+    <ClInclude Include="EnemySubmarine.h" />
     <ClInclude Include="GameView.h" />
     <ClInclude Include="InstructionView.h" />
     <ClInclude Include="LoadGameView.h" />
     <ClInclude Include="MenuView.h" />
+    <ClInclude Include="PlayerSubmarine.h" />
+    <ClInclude Include="Submarine.h" />
     <ClInclude Include="View.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -53,5 +53,14 @@
     <ClInclude Include="LoadGameView.h">
       <Filter>Header Files\Views</Filter>
     </ClInclude>
+    <ClInclude Include="EnemySubmarine.h">
+      <Filter>Header Files\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSubmarine.h">
+      <Filter>Header Files\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Submarine.h">
+      <Filter>Header Files\Views</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
