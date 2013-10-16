@@ -56,7 +56,7 @@ bool LoadGameView::Run()
 
 bool LoadGameView::Update()
 {
-	char Pressed=_getch();
+	int Pressed=_getch();
 
 	switch(Pressed)
 	{
@@ -65,12 +65,18 @@ bool LoadGameView::Update()
 		switch(Pressed)
 		{
 		case 72: // Up arrow
-			LastSelected=CurrentlySelected;
-			CurrentlySelected--;
+			if(CurrentlySelected>0)
+			{
+				LastSelected=CurrentlySelected;
+				CurrentlySelected--;
+			}
 			break;
 		case 80: // Down arrow
-			LastSelected=CurrentlySelected;
-			CurrentlySelected++;
+			if(CurrentlySelected<FileNames.size()-1)
+			{
+				LastSelected=CurrentlySelected;
+				CurrentlySelected++;
+			}
 			break;
 		}
 		break;

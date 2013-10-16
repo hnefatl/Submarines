@@ -8,11 +8,10 @@
 
 struct MenuOption
 {
-	MenuOption(const std::string &Name, View *RelatedView=NULL, const bool &Selected=false)
+	MenuOption(const std::string &Name, View *RelatedView=NULL)
 	{
 		this->Name=Name;
 		this->RelatedView=RelatedView;
-		this->Selected=Selected;
 	}
 	~MenuOption()
 	{
@@ -23,7 +22,6 @@ struct MenuOption
 		}
 	}
 
-	bool Selected;
 	std::string Name;
 	View *RelatedView;
 };
@@ -37,10 +35,13 @@ public:
 	virtual bool Run();
 
 	bool Update();
-	void Draw();
+	void Draw(const bool &Initial=false);
 
 protected:
 	std::vector<MenuOption> Options;
+
+	unsigned int CurrentlySelected;
+	unsigned int LastSelected;
 };
 
 #endif

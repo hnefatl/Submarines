@@ -49,13 +49,8 @@ bool InstructionView::Run()
 
 bool InstructionView::Update()
 {
-	char Pressed=_getch();
-
-	switch(Pressed)
-	{
-	case 27: // Escape
-		return false;
-	}
+	// Just wait for a keypress, no matter which one
+	_getch();
 
 	return true;
 }
@@ -63,5 +58,6 @@ void InstructionView::Draw()
 {
 	Clear();
 
-	std::cout<<Instructions;
+	std::cout<<Instructions<<std::endl;
+	std::cout<<"Press any key to continue...";
 }
