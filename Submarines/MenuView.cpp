@@ -6,13 +6,21 @@
 
 MenuView::MenuView()
 {
+	CurrentlySelected=0;
+	LastSelected=0;
+
 	Options.push_back(MenuOption("New Game", new GameView()));
 	Options.push_back(MenuOption("Load Game", new LoadGameView()));
 	Options.push_back(MenuOption("Instructions", new InstructionView()));
 	Options.push_back(MenuOption("Exit", NULL));
-
-	CurrentlySelected=0;
-	LastSelected=0;
+}
+MenuView::~MenuView()
+{
+	while(!Options.empty())
+	{
+		Options.front().Dispose();
+		Options.erase(Options.begin());
+	}
 }
 
 bool MenuView::Run()
@@ -54,6 +62,7 @@ bool MenuView::Update()
 			}
 			break;
 		}
+		break;
 	case 13: // Enter key
 		if(Options[CurrentlySelected].RelatedView!=NULL)
 		{
@@ -81,6 +90,9 @@ void MenuView::Draw(const bool &Initial)
 	{
 		// Title
 		// Had to add escape characters; the text now looks wonky
+		SetColour(GREY, BLACK);
+		Clear();
+
 		std::cout<<"	   _____       _                          _                 "<<std::endl;
 		std::cout<<"	  / ____|     | |                        (_)                "<<std::endl;
 		std::cout<<"	 | (___  _   _| |__  _ __ ___   __ _ _ __ _ _ __   ___  ___ "<<std::endl;
@@ -92,6 +104,7 @@ void MenuView::Draw(const bool &Initial)
 		for(unsigned int x=0; x<Options.size(); x++)
 		{
 			SetCursor((Width/2)-(Options[x].Name.size()/2), 9+x); // Below the title and central
+			std::cout<<Options[x].Name;
 		}
 	}
 	else

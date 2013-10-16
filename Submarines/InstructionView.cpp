@@ -7,30 +7,38 @@
 
 InstructionView::InstructionView()
 {
+	LoadInstructions();
+	Page=0;
+	PageChanged=true;
+}
+
+void InstructionView::LoadInstructions()
+{
 	std::ifstream In=std::ifstream("Instructions.txt", std::ios::binary | std::ios::beg | std::ios::in);
 	if(!In.good())
 	{
-		Instructions="You deleted the instructions file. You now don't know how to play.";
+		Instructions.push_back("");
+		Instructions[0]="You deleted the instructions file. You now don't know how to play.";
 	}
 	else
 	{
-		// Find file size
-		std::streamsize Size=0;
-		std::streamsize Temp=0;
-		do
-		{
-			In.seekg(std::ios::ate);
-			Size=In.tellg();
-			In.seekg(std::ios::beg);
-			Temp=In.tellg();
-		} while(Size!=Temp);
-
 		// Read instructions
-		In.read(&Instructions[0], Size);
-		In.close();
+		std::string Temp;
+		unsigned int LineCounter=0;
+		Instructions.push_back("");
+		while(std::getline(In, Temp))
+		{
+			LineCounter++;
+			Instructions.back()+=Temp+'\n';
+			Temp="";
 
-		// Terminate string
-		Instructions[(unsigned int)Size]='\0';
+			if(LineCounter>=22)
+			{
+				LineCounter=0;
+				Instructions.push_back("");
+			}
+		}
+		In.close();
 	}
 }
 
@@ -49,15 +57,46 @@ bool InstructionView::Run()
 
 bool InstructionView::Update()
 {
-	// Just wait for a keypress, no matter which one
-	_getch();
+	int Pressed=_getch();
+
+	switch(Pressed)
+	{
+	case 224:
+		Pressed=_getch();
+		switch(Pressed)
+		{
+		case 77: // Right arrow
+			if(Page<Instructions.size()-1)
+			{
+				Page++;
+				PageChanged=true;
+			}
+			break;
+		case 75: // Left arrow
+			if(Page>0)
+			{
+				Page--;
+				PageChanged=true;
+			}
+			break;
+		}
+		break;
+	case 27: // Escape
+		return false; // Signal return
+	}
 
 	return true;
 }
 void InstructionView::Draw()
 {
-	Clear();
-
-	std::cout<<Instructions<<std::endl;
-	std::cout<<"Press any key to continue...";
+	if(PageChanged)
+	{
+		PageChanged=false;
+		SetColour(GREY, BLACK);
+		Clear();
+		std::cout<<Instructions[Page]<<std::endl;
+		SetCursor(0, 24);
+		SetColour(GREEN, BLACK);
+		std::cout<<"Use the arrow keys to navigate the instructions.";
+	}
 }

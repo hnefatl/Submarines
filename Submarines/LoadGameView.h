@@ -27,6 +27,8 @@ protected:
 	unsigned int LastSelected;
 	unsigned int CurrentlySelected;
 
+	bool Exit;
+
 	unsigned int Width, Height;
 };
 

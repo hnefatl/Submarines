@@ -2,6 +2,7 @@
 #define _INSTRUCTIONVIEW_H
 
 #include "View.h"
+#include <vector>
 #include <string>
 
 class InstructionView
@@ -9,6 +10,7 @@ class InstructionView
 {
 public:
 	InstructionView();
+	void LoadInstructions();
 
 	virtual bool Run();
 
@@ -16,7 +18,9 @@ public:
 	void Draw();
 
 protected:
-	std::string Instructions;
+	std::vector<std::string> Instructions;
+	unsigned int Page;
+	bool PageChanged;
 };
 
 #endif

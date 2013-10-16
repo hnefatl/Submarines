@@ -6,19 +6,29 @@
 #include <string>
 #include <vector>
 
-struct MenuOption
+class MenuOption
 {
+public:
+	MenuOption()
+	{
+
+	}
 	MenuOption(const std::string &Name, View *RelatedView=NULL)
 	{
 		this->Name=Name;
 		this->RelatedView=RelatedView;
 	}
-	~MenuOption()
+
+	void Dispose()
 	{
 		if(RelatedView!=NULL)
 		{
 			delete RelatedView;
 			RelatedView=NULL;
+		}
+		if(Name!="")
+		{
+			Name="";
 		}
 	}
 
@@ -31,6 +41,7 @@ class MenuView
 {
 public:
 	MenuView();
+	~MenuView();
 
 	virtual bool Run();
 
