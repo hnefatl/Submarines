@@ -4,24 +4,42 @@
 
 #include "ConsoleControl.h"
 
-EnemySubmarine::EnemySubmarine(const Size &Size, std::mutex *ConsoleLock, const unsigned int &HullStrength)
-	:Submarine(HullStrength)
+EnemySubmarine EnemySubmarine::GenerateSubmarine(std::mutex *ConsoleLock)
 {
-	this->mSize=Size;
-	this->ConsoleLock=ConsoleLock;
+	EnemySubmarine New;
+	New.ConsoleLock=ConsoleLock;
+
+	// Generate data
+	// Generate new size
+	unsigned int NewSize=rand()%3;
+	New.mSize=Size(NewSize);
+
+	// Generate base dimensions
+	New.Lat.SetValue((rand()%200)+20); // Between 20m and 219m
+	New.Long.SetValue((rand()%200)+20); // Between 20m and 219m
+	New.Depth.SetValue((rand()%100)); // From 0m to 99m above
+	
+	// Generate derived dimensions
+	New.Distance.SetValue(sqrt(pow(New.Lat.GetValue(), 2)+pow(New.Long.GetValue(), 2))); // Pythagoras to find flat distance
+	New.Direct.SetValue(sqrt(pow(New.Distance.GetValue(), 2)+pow(New.Depth.GetValue(), 2)));
+
+	// Pick two to disable
+	unsigned int Temp=rand()%5;
+	switch(Temp)
+	{
+	case 0: New.Lat.Known=false; break;
+	case 1: New.Long.Known=false; break;
+	case 2: New.Depth.Known=false; break;
+	case 3: New.Distance.Known=false; break;
+	case 4: New.Direct.Known=false; break;
+	}
+
+	return New;
 }
 
-void EnemySubmarine::SetInformation(const Attribute &Depth, const Attribute &Distance, const Attribute &Pitch, const Attribute &Yaw)
+void EnemySubmarine::Start(const unsigned int &Firex, const unsigned int &Firey)
 {
-	this->Depth=Depth;
-	this->Distance=Distance;
-	this->Pitch=Pitch;
-	this->Yaw=Yaw;
-}
-
-Size EnemySubmarine::GetSize() const
-{
-	return mSize;
+	FiringThread=new std::thread(&EnemySubmarine::FiringFunction, this, Firex, Firey);
 }
 
 void EnemySubmarine::Hit()
@@ -64,27 +82,43 @@ void EnemySubmarine::DrawHullStatus(const unsigned int &x, const unsigned int &y
 void EnemySubmarine::DrawInformation(const unsigned int &x, const unsigned int &y)
 {
 	std::stringstream ss;
+
 	ConsoleLock->lock();
 	SetColour(GREY, BLACK);
 
-	SetCursor(x, y);
-	ss<<Depth.Value;
-	std::cout<<"Depth: "<<(Depth.Value!=0?ss.str():(Depth.Required?"     ":"?????"));
-	ss=std::stringstream();
+	unsigned int yOffset=0;
+	for(unsigned int x=0; x<Attributes.size(); x++)
+	{
+		SetCursor(x, y+yOffset);
+		// If the current attribute has been selected and this box is selected, display the attribute in green 
+		if(x==AttributeSelected && SubmarineSelected)
+		{
+			SetColour(GREEN, BLACK);
+		}
 
-	SetCursor(x, y+1);
-	ss<<Distance.Value;
-	std::cout<<"Distance: "<<(Distance.Value!=0?ss.str():(Distance.Required?"     ":"?????"));
-	ss=std::stringstream();
+		std::cout<<Attributes[x].Name<<": ";
+		if(Attributes[x].Known)
+		{
+			// Display the answer
+			std::cout<<Attributes[x].Value;
+		}
+		else
+		{
+			// Display what's been entered
+			std::cout<<Attributes[x].GetValue();
+		}
 
-	SetCursor(x, y+2);
-	ss<<Pitch.Value;
-	std::cout<<"Pitch: "<<(Pitch.Value!=0?ss.str():(Pitch.Required?"     ":"?????"));
-	ss=std::stringstream();
-
-	SetCursor(x, y+3);
-	ss<<Yaw.Value;
-	std::cout<<"Yaw: "<<(Yaw.Value!=0?ss.str():(Yaw.Required?"     ":"?????"));
+		if(yOffset==2)
+		{
+			// Add a space between lines for border
+			yOffset+=2;
+		}
+		else
+		{
+			// New line
+			yOffset++;
+		}
+	}
 
 	ConsoleLock->unlock();
 }
@@ -116,7 +150,7 @@ void EnemySubmarine::FiringFunction(const unsigned int &x, const unsigned int &y
 
 			// Beep for 100 milliseconds
 			Tone(100);
-			
+
 			// Ticker off
 			ConsoleLock->lock();
 			SetCursor(x, y);
@@ -141,8 +175,8 @@ void EnemySubmarine::Tone(const unsigned int &Duration, const bool &Async)
 {
 	if(Async)
 	{
-	// Launch new (short-lived) thread to beep
-	std::thread New(Beep, 600, Duration);
+		// Launch new (short-lived) thread to beep
+		std::thread New(Beep, 600, Duration);
 	}
 	else
 	{

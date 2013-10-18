@@ -2,42 +2,104 @@
 #define _ENEMYSUBMARINE_H
 
 #include "Submarine.h"
+
 #include <thread>
 #include <mutex>
+#include <string>
+#include <vector>
 
 enum Size
 {
-	Small,
-	Medium,
-	Large,
+	Small=0,
+	Medium=1,
+	Large=2,
 };
 
 struct Attribute
 {
-	Attribute(const double &Value=0, const bool &Required=false)
+	Attribute(const std::string &Name, const double &Value, const bool &Known)
 	{
+		this->Name=Name;
 		this->Value=Value;
-		this->Required=Required;
+		this->Known=Known;
 	}
 
-	double Value;
-	bool Required;
+	double GetValue() const
+	{
+		std::stringstream ss;
+		ss.precision(1);
+		ss<<Value;
+		double Temp;
+		ss>>Temp;
+		return Temp;
+	}
+	void SetValue(const double &Value)
+	{
+		std::stringstream ss;
+		ss.precision(1);
+		ss<<Value; // 1 d.p.
+		ss>>this->Value;
+	}
+	bool Input(const unsigned int &Pressed)
+	{
+		if(Pressed==8) // Backspace
+		{
+			Value.erase(Value.end()-1);
+		}
+		// Maximum size
+		else if(Value.size()==4)
+		{
+			return false;
+		}
+		else if(Pressed=='.')
+		{
+			Value+='.';
+		}
+		else
+		{
+			bool Number=false;
+			for(char x='0'; x<='9'; x++)
+			{
+				if(Pressed==x)
+				{
+					Value+=x;
+					Number=true;
+				}
+			}
+			if(!Number)
+			{
+				// Wasn't a valid input
+				return false;
+			}
+		}
+		
+		// Valid
+		return true;
+	}
+
+	std::string Name;
+	std::string InputedValue;
+	std::string Value;
+	bool Known;
 };
 
 class EnemySubmarine
-    : public Submarine
+	: public Submarine
 {
 public:
-    EnemySubmarine(const Size &Size, std::mutex *ConsoleLock, const unsigned int &HullStrength);
+	static EnemySubmarine GenerateSubmarine(std::mutex *ConsoleLock);
 
-	void SetInformation(const Attribute &Depth, const Attribute &Distance, const Attribute &Pitch, const Attribute &Yaw);
+	void Start(const unsigned int &Firex, const unsigned int &Firey);
 
-	Size GetSize() const;
+	void SetInformation(const Attribute &Depth, const Attribute &Distance, const Attribute &Pitch,
+		const Attribute &Yaw, const Attribute &Lat, const Attribute &Long);
 
-	void Hit();
+	virtual void Hit();
 
 	void DrawHullStatus(const unsigned int &x, const unsigned int &y);
 	void DrawInformation(const unsigned int &x, const unsigned int &y);
+
+	void ChangeValue(const char &Change, const unsigned int &x, const unsigned int &y);
 
 	void FiringFunction(const unsigned int &x, const unsigned int &y);
 
@@ -46,16 +108,19 @@ public:
 	// Members
 	Size mSize;
 
+	bool SubmarineSelected;
+	unsigned int AttributeSelected;
+	unsigned int LastAttributeSelected;
+
 	std::mutex *ConsoleLock;
 	std::thread *FiringThread;
 	bool FiringThreadRun;
-	
+
+	Attribute Lat;
+	Attribute Long;
 	Attribute Depth;
 	Attribute Distance;
-	Attribute Pitch;
-	Attribute Yaw;
-
-	std::string Value;
+	Attribute Direct;
 };
 
 #endif

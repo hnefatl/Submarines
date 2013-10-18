@@ -30,6 +30,8 @@ LoadGameView::LoadGameView()
 
 bool LoadGameView::Run()
 {
+	LastSelected=0;
+	CurrentlySelected=0;
 	Exit=false;
 	Draw(true);
 	while(true)

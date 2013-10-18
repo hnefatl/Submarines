@@ -48,6 +48,9 @@
     <ClCompile Include="ConsoleControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerSubmarine.cpp">
+      <Filter>Source Files\Submarines</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleControl.h">

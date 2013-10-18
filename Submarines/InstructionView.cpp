@@ -44,6 +44,9 @@ void InstructionView::LoadInstructions()
 
 bool InstructionView::Run()
 {
+	// Force page update
+	Page=0;
+	PageChanged=true;
 	while(true)
 	{
 		Draw();

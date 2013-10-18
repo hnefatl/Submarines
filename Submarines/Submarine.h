@@ -10,6 +10,8 @@ public:
 		this->Torpedoes=Torpedoes;
 	}
 
+	virtual void Hit()=0;
+
 protected:
 	unsigned int HullStrength;
 	unsigned int Torpedoes;
