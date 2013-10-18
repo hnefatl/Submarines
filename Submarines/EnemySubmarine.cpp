@@ -18,20 +18,32 @@ EnemySubmarine EnemySubmarine::GenerateSubmarine(std::mutex *ConsoleLock)
 	New.Lat.SetValue((rand()%200)+20); // Between 20m and 219m
 	New.Long.SetValue((rand()%200)+20); // Between 20m and 219m
 	New.Depth.SetValue((rand()%100)); // From 0m to 99m above
-	
+
 	// Generate derived dimensions
 	New.Distance.SetValue(sqrt(pow(New.Lat.GetValue(), 2)+pow(New.Long.GetValue(), 2))); // Pythagoras to find flat distance
 	New.Direct.SetValue(sqrt(pow(New.Distance.GetValue(), 2)+pow(New.Depth.GetValue(), 2)));
 
 	// Pick two to disable
-	unsigned int Temp=rand()%5;
-	switch(Temp)
+	std::vector<Attribute *> Attributes;
+	Attributes.reserve(5);
+	Attributes.push_back(&New.Lat);
+	Attributes.push_back(&New.Long);
+	Attributes.push_back(&New.Depth);
+	Attributes.push_back(&New.Distance);
+	Attributes.push_back(&New.Direct);
+
+	// Set them all to be known initially
+	for(unsigned int x=0; x<Attributes.size(); x++)
 	{
-	case 0: New.Lat.Known=false; break;
-	case 1: New.Long.Known=false; break;
-	case 2: New.Depth.Known=false; break;
-	case 3: New.Distance.Known=false; break;
-	case 4: New.Direct.Known=false; break;
+		Attributes[x]->Known=true;
+	}
+
+	// Remove two from the list of knowns
+	while(Attributes.size()!=3)
+	{
+		unsigned int Temp=rand()%Attributes.size();
+		Attributes[Temp]->Known=false;
+		Attributes.erase(Attributes.begin()+Temp);
 	}
 
 	return New;

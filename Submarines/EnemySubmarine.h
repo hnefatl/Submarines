@@ -17,13 +17,6 @@ enum Size
 
 struct Attribute
 {
-	Attribute(const std::string &Name, const double &Value, const bool &Known)
-	{
-		this->Name=Name;
-		this->Value=Value;
-		this->Known=Known;
-	}
-
 	double GetValue() const
 	{
 		std::stringstream ss;
@@ -77,7 +70,6 @@ struct Attribute
 		return true;
 	}
 
-	std::string Name;
 	std::string InputedValue;
 	std::string Value;
 	bool Known;
