@@ -35,6 +35,8 @@ protected:
 	PlayerSubmarine Player;
 	std::vector<EnemySubmarine> Enemies;
 	std::mutex *EnemiesLock;
+	unsigned int SubmarineSelected;
+	unsigned int LastSubmarineSelected;
 	
 	std::thread *EnemyAdder;
 	bool AddEnemies;

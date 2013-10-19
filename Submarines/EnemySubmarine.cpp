@@ -8,6 +8,9 @@ EnemySubmarine EnemySubmarine::GenerateSubmarine(std::mutex *ConsoleLock)
 {
 	EnemySubmarine New;
 	New.ConsoleLock=ConsoleLock;
+	New.SubmarineSelected=false;
+	New.AttributeSelected=0;
+	New.LastAttributeSelected=0;
 
 	// Generate data
 	// Generate new size
@@ -93,11 +96,23 @@ void EnemySubmarine::DrawHullStatus(const unsigned int &x, const unsigned int &y
 }
 void EnemySubmarine::DrawInformation(const unsigned int &x, const unsigned int &y)
 {
-	std::stringstream ss;
+	// Create temporary lists for convenience
+	std::vector<Attribute *> Attributes;
+	Attributes.reserve(5);
+	Attributes.push_back(&Lat);
+	Attributes.push_back(&Long);
+	Attributes.push_back(&Depth);
+	Attributes.push_back(&Distance);
+	Attributes.push_back(&Direct);
+	std::vector<std::string> Names;
+	Names.push_back("Lat");
+	Names.push_back("Long");
+	Names.push_back("Depth");
+	Names.push_back("Depth");
+	Names.push_back("Distance");
+	
 
 	ConsoleLock->lock();
-	SetColour(GREY, BLACK);
-
 	unsigned int yOffset=0;
 	for(unsigned int x=0; x<Attributes.size(); x++)
 	{
@@ -108,16 +123,16 @@ void EnemySubmarine::DrawInformation(const unsigned int &x, const unsigned int &
 			SetColour(GREEN, BLACK);
 		}
 
-		std::cout<<Attributes[x].Name<<": ";
-		if(Attributes[x].Known)
+		std::cout<<Names[x]<<": ";
+		if(Attributes[x]->Known)
 		{
 			// Display the answer
-			std::cout<<Attributes[x].Value;
+			std::cout<<Attributes[x]->Value;
 		}
 		else
 		{
 			// Display what's been entered
-			std::cout<<Attributes[x].GetValue();
+			std::cout<<Attributes[x]->GetValue();
 		}
 
 		if(yOffset==2)
@@ -133,6 +148,18 @@ void EnemySubmarine::DrawInformation(const unsigned int &x, const unsigned int &
 	}
 
 	ConsoleLock->unlock();
+}
+
+bool EnemySubmarine::Input(const unsigned int &Input)
+{
+	if(AttributeSelected==0)
+	{
+		return Yaw.Input(Input);
+	}
+	else
+	{
+		return Pitch.Input(Input);
+	}
 }
 
 void EnemySubmarine::FiringFunction(const unsigned int &x, const unsigned int &y)

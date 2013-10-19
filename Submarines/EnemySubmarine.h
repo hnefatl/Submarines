@@ -3,6 +3,8 @@
 
 #include "Submarine.h"
 
+#include <string>
+#include <sstream>
 #include <thread>
 #include <mutex>
 #include <string>
@@ -91,7 +93,7 @@ public:
 	void DrawHullStatus(const unsigned int &x, const unsigned int &y);
 	void DrawInformation(const unsigned int &x, const unsigned int &y);
 
-	void ChangeValue(const char &Change, const unsigned int &x, const unsigned int &y);
+	bool Input(const unsigned int &Input);
 
 	void FiringFunction(const unsigned int &x, const unsigned int &y);
 
@@ -113,6 +115,9 @@ public:
 	Attribute Depth;
 	Attribute Distance;
 	Attribute Direct;
+
+	Attribute Yaw;
+	Attribute Pitch;
 };
 
 #endif

@@ -29,13 +29,16 @@ bool GameView::Run()
 	AddEnemies=true;
 	EnemyAdder=new std::thread(&GameView::EnemyAdderFunction, this);
 
+	SubmarineSelected=0;
+	LastSubmarineSelected=0;
+
 	Draw(true);
 	while(true)
 	{
 		Draw(false);
-		if(!Update())
+		if(Update()) // Change entered
 		{
-			return false;
+
 		}
 	}
 
@@ -49,13 +52,49 @@ bool GameView::Update()
 	{
 	case 224: // Arrow key
 		Pressed=_getch();
+		EnemiesLock->lock(); // Lock the enemies as it will be used
 		switch(Pressed)
 		{
-			
+		case 72: // Up arrow
+			if(Enemies[SubmarineSelected].AttributeSelected>0)
+			{
+				Enemies[SubmarineSelected].AttributeSelected--;
+			}
+			break;
+		case 80: // Down arrow
+			if(Enemies[SubmarineSelected].AttributeSelected<1)
+			{
+				Enemies[SubmarineSelected].AttributeSelected++;
+			}
+			break;
+		case 75: // Left arrow
+			if(SubmarineSelected>0)
+			{
+				LastSubmarineSelected=SubmarineSelected;
+				SubmarineSelected--;
+				Enemies[LastSubmarineSelected].SubmarineSelected=false;
+				Enemies[SubmarineSelected].SubmarineSelected=true;
+			}
+			break;
+		case 77: // Right arrow
+			if(SubmarineSelected<Enemies.size()-1)
+			{
+				LastSubmarineSelected=SubmarineSelected;
+				SubmarineSelected++;
+				Enemies[LastSubmarineSelected].SubmarineSelected=false;
+				Enemies[SubmarineSelected].SubmarineSelected=true;
+			}
+			break;
 		}
+		EnemiesLock->unlock(); // Unlock the enemies after use
+		break;
+	case 13:
+		return true; // Signal change
+	default: // Assume input
+		Enemies[SubmarineSelected].Input(Pressed); // Delegate to EnemySubmarine, which will pick the correct attribute
 		break;
 	}
-	return true;
+	return false; // Signal no change
 }
 void GameView::Draw(const bool &Initial)
 {
@@ -99,11 +138,10 @@ void GameView::Draw(const bool &Initial)
 		BoxTemplate.push_back("|            |");
 		BoxTemplate.push_back("|            |");
 		BoxTemplate.push_back("|            |");
+		BoxTemplate.push_back("|            |");
+		BoxTemplate.push_back("|            |");
 		BoxTemplate.push_back("+------------+");
 		BoxTemplate.push_back("|            |");
-		BoxTemplate.push_back("|            |");
-		BoxTemplate.push_back("|            |");
-		BoxTemplate.push_back("+------------+");
 		BoxTemplate.push_back("|            |");
 		BoxTemplate.push_back("+------------+");
 
@@ -129,7 +167,15 @@ void GameView::Draw(const bool &Initial)
 	}
 	else
 	{
-
+		EnemiesLock->lock();
+		unsigned int y=6;
+		unsigned int X=0;
+		for(unsigned int x=0; x<Enemies.size(); x++)
+		{
+			Enemies[x].DrawInformation(X, y);
+			X+=16;
+		}
+		EnemiesLock->unlock();
 	}
 }
 
@@ -138,7 +184,7 @@ void GameView::EnemyAdderFunction()
 	while(AddEnemies)
 	{
 		std::this_thread::sleep_for(std::chrono::seconds((rand()%10)+30)); // Sleep for between 30 and 39 seconds
-		
+
 		if(!AddEnemies) // If we've stopped adding enemies
 		{
 			break;
